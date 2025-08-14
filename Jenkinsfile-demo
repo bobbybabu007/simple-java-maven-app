@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    stages {
+        stage('SCM') {
+            steps {
+                echo 'First stage'
+                git branch: 'main', url: 'https://github.com/bobbybabu007/simple-java-maven-app.git'
+            }
+        }
+        stage('Package') {
+            enviornment {
+                TEST_SERVER_URL = '4.209.33.14'
+            }
+            steps {
+                withCredentials([usernameColonPassword(credentialsId: 'test-server-creds', variable: 'TEAM1_TEST_SERVER_CREDS')]) 
+                {
+                    sh 'mvn clean install' 
+                    // sh 'ssh $TEST_SERVER_URL'
+                }
+
+            }
+        }
+        stage('Docker') {
+            steps {
+                echo 'third step' 
+                sh 'docker --help'
+            }
+        }        
+    }
+}
