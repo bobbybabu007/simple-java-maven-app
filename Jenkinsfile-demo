@@ -8,7 +8,7 @@ pipeline {
             }
         }
         stage('Package') {
-            enviornment {
+            environment {
                 TEST_SERVER_URL = '4.209.33.14'
             }
             steps {
