@@ -12,19 +12,37 @@ pipeline {
                 TEST_SERVER_URL = '4.209.33.14'
             }
             steps {
-                withCredentials([usernameColonPassword(credentialsId: 'test-server-creds', variable: 'TEAM1_TEST_SERVER_CREDS')]) 
-                {
+            //    withCredentials([usernameColonPassword(credentialsId: 'test-server-creds', variable: 'TEAM1_TEST_SERVER_CREDS')]) 
+            //    {
                     sh 'mvn clean install' 
                     // sh 'ssh $TEST_SERVER_URL'
-                }
-
+            //    }
             }
         }
-        stage('Docker') {
+        stage('Create Container image') {
             steps {
-                echo 'third step' 
+                echo 'creating container image' 
                 sh 'docker --help'
             }
         }        
+        stage('Deploy to PROD Environment') {
+            environment {
+                IMAGE_ID = 'app1:prod'
+            }
+            steps {
+                echo 'deploying $IMAGE_ID to PROD cluster' 
+            }
+        }        
+    }
+    post {
+        always {
+            echo 'pipeline trigger notification on slack'
+        }
+        success {
+            echo 'build is successful email sent to team inbox'
+        }
+        failure {
+            echo 'Email sent to $DEVELOPER notifying of build failure'
+        }
     }
 }
