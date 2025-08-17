@@ -35,7 +35,6 @@ pipeline {
                 sh 'docker --help'
             }
         }        
-    }
         stage('Deploy to Dev Environment') {
             environment {
                 IMAGE_ID = 'app1:dev'
