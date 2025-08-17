@@ -4,7 +4,17 @@ pipeline {
         stage('SCM') {
             steps {
                 echo 'First stage'
-                git branch: 'main', url: 'https://github.com/bobbybabu007/simple-java-maven-app.git'
+                git branch: 'dev', url: 'https://github.com/bobbybabu007/simple-java-maven-app.git'
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                sh 'mvn -B -DskipTests clean test'
+            }
+        }
+        stage('Sonarqube Scans') {
+            steps {
+                echo 'sonar-scanner ....'                
             }
         }
         stage('Package') {
@@ -17,14 +27,33 @@ pipeline {
                     sh 'mvn clean install' 
                     // sh 'ssh $TEST_SERVER_URL'
                 }
-
             }
         }
-        stage('Docker') {
+        stage('Create Container image') {
             steps {
-                echo 'third step' 
+                echo 'creating container image' 
                 sh 'docker --help'
             }
         }        
+    }
+        stage('Deploy to Dev Environment') {
+            environment {
+                IMAGE_ID = 'app1:dev'
+            }
+            steps {
+                echo 'deploying $IMAGE_ID to Dev cluster' 
+            }
+        }        
+    }
+    post {
+        always {
+            echo 'pipeline trigger notification on slack'
+        }
+        success {
+            echo 'build is successful email sent to team inbox'
+        }
+        failure {
+            echo 'Email sent to $DEVELOPER notifying of build failure'
+        }
     }
 }
