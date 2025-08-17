@@ -22,11 +22,11 @@ pipeline {
                 TEST_SERVER_URL = '4.209.33.14'
             }
             steps {
-                withCredentials([usernameColonPassword(credentialsId: 'test-server-creds', variable: 'TEAM1_TEST_SERVER_CREDS')]) 
-                {
+            //    withCredentials([usernameColonPassword(credentialsId: 'test-server-creds', variable: 'TEAM1_TEST_SERVER_CREDS')]) 
+            //    {
                     sh 'mvn clean install' 
                     // sh 'ssh $TEST_SERVER_URL'
-                }
+            //    }
             }
         }
         stage('Create Container image') {
