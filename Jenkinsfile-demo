@@ -4,7 +4,7 @@ pipeline {
         stage('SCM') {
             steps {
                 echo 'First stage'
-                git branch: 'dev', url: 'https://github.com/bobbybabu007/simple-java-maven-app.git'
+                git branch: 'dev-northamerica', url: 'https://github.com/bobbybabu007/simple-java-maven-app.git'
             }
         }
         stage('Unit Tests') {
@@ -37,7 +37,7 @@ pipeline {
         }        
         stage('Deploy to Dev Environment') {
             environment {
-                IMAGE_ID = 'app1:dev'
+                IMAGE_ID = 'app1:dev-na'
             }
             steps {
                 echo 'deploying $IMAGE_ID to Dev cluster' 
